@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: approvals-postgres
+    environment:
+      POSTGRES_USER: approvals_user
+      POSTGRES_PASSWORD: approvals_password
+      POSTGRES_DB: approvals_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U approvals_user -d approvals_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: approvals-app
+    environment:
+      DATABASE_URL: "postgresql://approvals_user:approvals_password@postgres:5432/approvals_db?schema=public"
+      NEXTAUTH_SECRET: "development-secret-change-in-production"
+      NEXTAUTH_URL: "http://localhost:3000"
+      NODE_ENV: "development"
+    ports:
+      - "3000:3000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - /app/.next
+    command: npm run dev
+
+volumes:
+  postgres_data:

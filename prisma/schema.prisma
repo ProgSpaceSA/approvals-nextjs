@@ -1,0 +1,114 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  CEO
+  EXECUTIVE
+}
+
+enum RequestStatus {
+  PENDING
+  PROCESSED
+  REJECTED
+}
+
+enum AuditAction {
+  REQUEST_CREATED
+  SUGGESTION_ADDED
+  REQUEST_PROCESSED
+  REQUEST_REJECTED
+  OTHER_DECISION
+}
+
+model User {
+  id             String @id @default(cuid())
+  email          String @unique
+  name           String
+  role           Role
+  hashedPassword String
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  // Relations
+  createdRequests Request[] @relation("RequestCreator")
+  decidedRequests Request[] @relation("RequestDecider")
+  auditLogs       AuditLog[]
+
+  @@map("users")
+}
+
+model Request {
+  id                   String        @id @default(cuid())
+  title                String
+  description          String        @db.Text
+  status               RequestStatus @default(PENDING)
+  otherDecision        String?       @db.Text
+  createdAt            DateTime      @default(now())
+  updatedAt            DateTime      @updatedAt
+  decidedAt            DateTime?
+
+  // Foreign keys
+  createdById          String
+  decidedById          String?
+  chosenSuggestionId   String?
+
+  // Relations
+  createdBy            User          @relation("RequestCreator", fields: [createdById], references: [id], onDelete: Restrict)
+  decidedBy            User?         @relation("RequestDecider", fields: [decidedById], references: [id], onDelete: SetNull)
+  chosenSuggestion     Suggestion?   @relation("ChosenSuggestion", fields: [chosenSuggestionId], references: [id], onDelete: SetNull)
+  suggestions          Suggestion[]  @relation("RequestSuggestions")
+  auditLogs            AuditLog[]
+
+  // Indexes
+  @@index([status, createdAt(sort: Desc)])
+  @@index([createdById])
+  @@index([decidedById])
+  @@map("requests")
+}
+
+model Suggestion {
+  id        String   @id @default(cuid())
+  label     String
+  details   String   @db.Text
+  createdAt DateTime @default(now())
+
+  // Foreign keys
+  requestId String
+
+  // Relations
+  request          Request   @relation("RequestSuggestions", fields: [requestId], references: [id], onDelete: Cascade)
+  chosenInRequests Request[] @relation("ChosenSuggestion")
+
+  @@index([requestId])
+  @@map("suggestions")
+}
+
+model AuditLog {
+  id        String      @id @default(cuid())
+  action    AuditAction
+  metadata  Json?
+  createdAt DateTime    @default(now())
+
+  // Foreign keys
+  actorId   String
+  requestId String
+
+  // Relations
+  actor     User    @relation(fields: [actorId], references: [id], onDelete: Cascade)
+  request   Request @relation(fields: [requestId], references: [id], onDelete: Cascade)
+
+  // Indexes
+  @@index([createdAt(sort: Desc)])
+  @@index([requestId])
+  @@index([actorId])
+  @@map("audit_logs")
+}

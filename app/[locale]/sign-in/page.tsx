@@ -5,17 +5,22 @@ import { signIn } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useTranslations, useLocale } from 'next-intl'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { LoadingSpinner } from '@/components/ui/loading-spinner'
+import { LanguageSwitcher } from '@/components/ui/language-switcher'
 import { signInSchema, type SignInInput } from '@/lib/validations'
 
 export default function SignInPage() {
   const [error, setError] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(false)
   const router = useRouter()
+  const t = useTranslations('auth')
+  const tNav = useTranslations('navigation')
+  const locale = useLocale()
 
   const {
     register,
@@ -37,12 +42,12 @@ export default function SignInPage() {
       })
 
       if (result?.error) {
-        setError('Invalid email or password')
+        setError(t('invalidCredentials'))
       } else {
         router.refresh()
       }
     } catch (err) {
-      setError('An unexpected error occurred')
+      setError(t('invalidCredentials'))
     } finally {
       setIsLoading(false)
     }
@@ -52,25 +57,28 @@ export default function SignInPage() {
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
         <div className="text-center">
-          <h1 className="text-3xl font-bold text-gray-900">Approvals System</h1>
-          <p className="mt-2 text-gray-600">Sign in to your account</p>
+          <div className="flex justify-between items-center mb-4">
+            <h1 className="text-3xl font-bold text-gray-900">{tNav('appTitle')}</h1>
+            <LanguageSwitcher />
+          </div>
+          <p className="mt-2 text-gray-600">{t('signIn')}</p>
         </div>
 
         <Card>
           <CardHeader>
-            <CardTitle>Sign In</CardTitle>
+            <CardTitle>{t('signIn')}</CardTitle>
             <CardDescription>
-              Enter your credentials to access the system
+              {t('enterCredentials')}
             </CardDescription>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
               <div>
-                <Label htmlFor="email">Email</Label>
+                <Label htmlFor="email">{t('email')}</Label>
                 <Input
                   id="email"
                   type="email"
-                  placeholder="Enter your email"
+                  placeholder={t('enterEmail')}
                   {...register('email')}
                   disabled={isLoading}
                 />
@@ -80,11 +88,11 @@ export default function SignInPage() {
               </div>
 
               <div>
-                <Label htmlFor="password">Password</Label>
+                <Label htmlFor="password">{t('password')}</Label>
                 <Input
                   id="password"
                   type="password"
-                  placeholder="Enter your password"
+                  placeholder={t('enterPassword')}
                   {...register('password')}
                   disabled={isLoading}
                 />
@@ -106,17 +114,17 @@ export default function SignInPage() {
               >
                 {isLoading ? (
                   <div className="flex items-center justify-center">
-                    <LoadingSpinner size="sm" className="mr-2" />
-                    Signing in...
+                    <LoadingSpinner size="sm" className={locale === 'ar' ? 'ml-2' : 'mr-2'} />
+                    {t('signingIn')}
                   </div>
                 ) : (
-                  'Sign In'
+                  t('signIn')
                 )}
               </Button>
             </form>
 
             <div className="mt-6 text-sm text-gray-600">
-              <p className="font-semibold">Demo Accounts:</p>
+              <p className="font-semibold">{t('demoAccounts')}:</p>
               <div className="mt-2 space-y-1">
                 <p><strong>CEO:</strong> ceo@example.com / Passw0rd!</p>
                 <p><strong>Executive:</strong> exec@example.com / Passw0rd!</p>

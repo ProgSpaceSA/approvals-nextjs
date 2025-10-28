@@ -2,6 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
+@import url('https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap');
+
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -56,4 +58,61 @@
   body {
     @apply bg-background text-foreground;
   }
+  
+  /* RTL Support */
+  [dir="rtl"] {
+    text-align: right;
+  }
+  
+  [dir="rtl"] .flex {
+    flex-direction: row-reverse;
+  }
+  
+  /* Arabic Font Support */
+  .font-amiri {
+    font-family: 'Amiri', serif;
+  }
+  
+  .font-inter {
+    font-family: 'Inter', sans-serif;
+  }
+}
+
+@layer components {
+  /* RTL-specific component styles */
+  [dir="rtl"] .space-x-1 > :not([hidden]) ~ :not([hidden]) {
+    --tw-space-x-reverse: 1;
+    margin-right: calc(0.25rem * var(--tw-space-x-reverse));
+    margin-left: calc(0.25rem * calc(1 - var(--tw-space-x-reverse)));
+  }
+  
+  [dir="rtl"] .space-x-2 > :not([hidden]) ~ :not([hidden]) {
+    --tw-space-x-reverse: 1;
+    margin-right: calc(0.5rem * var(--tw-space-x-reverse));
+    margin-left: calc(0.5rem * calc(1 - var(--tw-space-x-reverse)));
+  }
+  
+  [dir="rtl"] .space-x-3 > :not([hidden]) ~ :not([hidden]) {
+    --tw-space-x-reverse: 1;
+    margin-right: calc(0.75rem * var(--tw-space-x-reverse));
+    margin-left: calc(0.75rem * calc(1 - var(--tw-space-x-reverse)));
+  }
+  
+  [dir="rtl"] .space-x-4 > :not([hidden]) ~ :not([hidden]) {
+    --tw-space-x-reverse: 1;
+    margin-right: calc(1rem * var(--tw-space-x-reverse));
+    margin-left: calc(1rem * calc(1 - var(--tw-space-x-reverse)));
+  }
+  
+  /* RTL Padding and Margin adjustments */
+  [dir="rtl"] .pl-3 { padding-left: 0; padding-right: 0.75rem; }
+  [dir="rtl"] .pr-3 { padding-right: 0; padding-left: 0.75rem; }
+  [dir="rtl"] .ml-2 { margin-left: 0; margin-right: 0.5rem; }
+  [dir="rtl"] .mr-2 { margin-right: 0; margin-left: 0.5rem; }
+  [dir="rtl"] .ml-4 { margin-left: 0; margin-right: 1rem; }
+  [dir="rtl"] .mr-4 { margin-right: 0; margin-left: 1rem; }
+  
+  /* RTL Text alignment */
+  [dir="rtl"] .text-left { text-align: right; }
+  [dir="rtl"] .text-right { text-align: left; }
 }

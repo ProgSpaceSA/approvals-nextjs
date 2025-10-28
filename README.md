@@ -2,6 +2,16 @@
 
 A production-ready approvals system built with Next.js, featuring role-based access control for CEO and Executive users. Executives create requests with multiple suggestions, and CEOs review and make decisions.
 
+## 🧩 Project Idea (What and Why)
+
+Organizations routinely need clear, auditable decisions on proposals (budgets, policies, purchases). Email threads and chat messages are hard to track and easy to lose. This project provides a focused approvals workflow where:
+
+- Executives submit a request with 2–10 concrete suggestions/options.
+- A CEO reviews the context and either chooses an option, writes a custom decision, or rejects the request.
+- Every action is captured in an immutable audit trail for accountability and compliance.
+
+The result is a transparent, structured, and fast decision-making process with role-based access, localization (AR/EN), and a modern, responsive UI.
+
 ## 🚀 Features
 
 ### Core Functionality
@@ -183,7 +193,11 @@ Test coverage includes:
 
 ## 🚀 Deployment
 
-### Environment Variables
+This guide covers production deployment using Yarn, Docker, and Vercel.
+
+### 1) Environment Variables
+Create `.env` from `env.example` and set the following:
+
 ```bash
 DATABASE_URL="postgresql://user:pass@host:port/db"
 NEXTAUTH_SECRET="your-production-secret"
@@ -191,22 +205,98 @@ NEXTAUTH_URL="https://your-domain.com"
 NODE_ENV="production"
 ```
 
-### Build and Deploy
-```bash
-# Build the application
-npm run build
+Notes:
+- Set `NEXTAUTH_URL` to your public URL (e.g. `https://app.example.com`).
+- Generate a strong `NEXTAUTH_SECRET` (e.g. `openssl rand -base64 32`).
+- Ensure the database is reachable from your hosting environment.
 
-# Start production server
-npm start
+### 2) Production Build & Run (Node.js server)
+
+```bash
+# Install deps
+yarn install --frozen-lockfile
+
+# Generate Prisma client
+yarn prisma:generate
+
+# Apply migrations
+yarn prisma:deploy
+
+# Build Next.js (standalone output is enabled in next.config.js)
+yarn build
+
+# Start server
+yarn start
 ```
 
-### Docker Production
+Optional: systemd service (Linux)
+
+```ini
+[Unit]
+Description=Approvals Next.js
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=/var/www/approvals-nextjs
+Environment=NODE_ENV=production
+EnvironmentFile=/var/www/approvals-nextjs/.env
+ExecStart=/usr/bin/yarn start
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
+```
+
+### 3) Docker Deployment
+
+Build and run the standalone server image:
+
 ```bash
-# Build production image
+# Build image
 docker build -t approvals-system .
 
-# Run with environment variables
-docker run -p 3000:3000 --env-file .env approvals-system
+# Run container
+docker run --name approvals \
+  --env-file .env \
+  -p 3000:3000 \
+  approvals-system
+```
+
+With Docker Compose (database + app):
+
+```bash
+# Start services in background
+yarn docker:up
+
+# Apply migrations inside the app container (first run)
+docker exec -it $(docker ps -qf name=approvals) yarn prisma:deploy
+```
+
+### 4) Vercel Deployment
+
+Vercel is well-suited for Next.js deployments:
+- Connect your Git repository in Vercel.
+- Set environment variables in the Vercel dashboard (`DATABASE_URL`, `NEXTAUTH_SECRET`, `NEXTAUTH_URL`).
+- Ensure your database allows connections from Vercel (or use a managed Postgres like Neon/Supabase/PlanetScale compatible).
+
+Prisma on Vercel:
+- Use `prisma migrate deploy` during build via a Vercel Build Step or CI step before deployment.
+- Alternatively, run migrations from a CI/CD pipeline or a one-off script targeting the same database.
+
+No extra configuration is required for Next.js 15 app router. This project already sets `output: 'standalone'`.
+
+### 5) Health Checks
+
+After deployment, verify:
+
+```bash
+# App responds
+curl -I https://your-domain.com | head -n 1
+
+# Sign-in route (localized)
+curl -I https://your-domain.com/ar/sign-in | head -n 1
 ```
 
 ## 🔧 Development Scripts

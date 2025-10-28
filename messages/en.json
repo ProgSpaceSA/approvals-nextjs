@@ -1,0 +1,136 @@
+{
+  "common": {
+    "loading": "Loading...",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "view": "View",
+    "search": "Search",
+    "filter": "Filter",
+    "next": "Next",
+    "previous": "Previous",
+    "all": "All",
+    "yes": "Yes",
+    "no": "No",
+    "confirm": "Confirm",
+    "back": "Back"
+  },
+  "auth": {
+    "signIn": "Sign In",
+    "signOut": "Sign Out",
+    "email": "Email",
+    "password": "Password",
+    "enterEmail": "Enter your email",
+    "enterPassword": "Enter your password",
+    "invalidCredentials": "Invalid email or password",
+    "signingIn": "Signing in...",
+    "enterCredentials": "Enter your credentials to access the system",
+    "demoAccounts": "Demo Accounts"
+  },
+  "navigation": {
+    "appTitle": "Approvals System",
+    "dashboard": "Dashboard",
+    "myRequests": "My Requests",
+    "requests": "Requests"
+  },
+  "dashboard": {
+    "title": "CEO Dashboard",
+    "subtitle": "Review and approve requests from executives",
+    "totalRequests": "Total Requests",
+    "pending": "Pending",
+    "processed": "Processed",
+    "rejected": "Rejected",
+    "searchPlaceholder": "Search requests...",
+    "needsReview": "Needs Review",
+    "noRequests": "No requests found",
+    "review": "Review"
+  },
+  "myRequests": {
+    "title": "My Requests",
+    "subtitle": "Create and track your approval requests",
+    "newRequest": "New Request",
+    "noRequests": "No requests yet",
+    "noRequestsDescription": "Create your first request to get started",
+    "createRequest": "Create Request",
+    "approved": "Approved"
+  },
+  "request": {
+    "title": "Title",
+    "description": "Description",
+    "status": "Status",
+    "createdBy": "Created by",
+    "decidedBy": "Decided by",
+    "createdAt": "Created at",
+    "decidedAt": "Decided at",
+    "suggestions": "Suggestions",
+    "suggestion": "Suggestion",
+    "choose": "Choose",
+    "chosen": "Chosen",
+    "actions": "Actions",
+    "makeOtherDecision": "Make Other Decision",
+    "cancelOtherDecision": "Cancel Other Decision",
+    "yourDecision": "Your Decision",
+    "enterCustomDecision": "Enter your custom decision...",
+    "submitDecision": "Submit Decision",
+    "rejectRequest": "Reject Request",
+    "rejectConfirmTitle": "Reject Request",
+    "rejectConfirmDescription": "Are you sure you want to reject this request? This action cannot be undone.",
+    "reject": "Reject",
+    "customDecision": "Custom Decision",
+    "awaitingReview": "Awaiting CEO review",
+    "rejectedBy": "Rejected by {name}",
+    "approvedBy": "Approved by {name}"
+  },
+  "createRequest": {
+    "title": "Create New Request",
+    "enterTitle": "Enter request title",
+    "enterDescription": "Provide detailed context for your request",
+    "suggestionsRequired": "Suggestions (2-10 required)",
+    "addSuggestion": "Add Suggestion",
+    "suggestionLabel": "Label",
+    "suggestionDetails": "Details",
+    "briefDescription": "Brief description of this option",
+    "detailedExplanation": "Detailed explanation of this option",
+    "creating": "Creating...",
+    "titleRequired": "Title is required",
+    "descriptionRequired": "Description is required",
+    "labelRequired": "Label is required",
+    "detailsRequired": "Details are required",
+    "minSuggestions": "At least 2 suggestions are required",
+    "maxSuggestions": "Maximum 10 suggestions allowed"
+  },
+  "audit": {
+    "activityTimeline": "Activity Timeline",
+    "noActivity": "No activity yet",
+    "requestCreated": "Created request",
+    "requestProcessed": "Processed request",
+    "requestRejected": "Rejected request",
+    "otherDecision": "Made custom decision",
+    "choseSuggestion": "Chose suggestion: {label}"
+  },
+  "status": {
+    "pending": "Pending",
+    "processed": "Processed", 
+    "rejected": "Rejected"
+  },
+  "roles": {
+    "CEO": "CEO",
+    "EXECUTIVE": "Executive"
+  },
+  "errors": {
+    "generic": "An unexpected error occurred",
+    "unauthorized": "Access denied",
+    "forbidden": "You don't have permission to perform this action",
+    "notFound": "Resource not found",
+    "validation": "Please check your input and try again",
+    "network": "Network error, please try again"
+  },
+  "pagination": {
+    "page": "Page",
+    "of": "of",
+    "showing": "Showing",
+    "to": "to",
+    "entries": "entries"
+  }
+}

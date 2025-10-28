@@ -1,0 +1,136 @@
+{
+  "common": {
+    "loading": "جاري التحميل...",
+    "save": "حفظ",
+    "cancel": "إلغاء",
+    "delete": "حذف",
+    "edit": "تعديل",
+    "view": "عرض",
+    "search": "بحث",
+    "filter": "تصفية",
+    "next": "التالي",
+    "previous": "السابق",
+    "all": "الكل",
+    "yes": "نعم",
+    "no": "لا",
+    "confirm": "تأكيد",
+    "back": "رجوع"
+  },
+  "auth": {
+    "signIn": "تسجيل الدخول",
+    "signOut": "تسجيل الخروج",
+    "email": "البريد الإلكتروني",
+    "password": "كلمة المرور",
+    "enterEmail": "أدخل بريدك الإلكتروني",
+    "enterPassword": "أدخل كلمة المرور",
+    "invalidCredentials": "البريد الإلكتروني أو كلمة المرور غير صحيحة",
+    "signingIn": "جاري تسجيل الدخول...",
+    "enterCredentials": "أدخل بياناتك للوصول إلى النظام",
+    "demoAccounts": "حسابات تجريبية"
+  },
+  "navigation": {
+    "appTitle": "نظام الموافقات",
+    "dashboard": "لوحة التحكم",
+    "myRequests": "طلباتي",
+    "requests": "الطلبات"
+  },
+  "dashboard": {
+    "title": "لوحة تحكم الرئيس التنفيذي",
+    "subtitle": "مراجعة والموافقة على طلبات المدراء التنفيذيين",
+    "totalRequests": "إجمالي الطلبات",
+    "pending": "قيد الانتظار",
+    "processed": "تمت المعالجة",
+    "rejected": "مرفوضة",
+    "searchPlaceholder": "البحث في الطلبات...",
+    "needsReview": "تحتاج مراجعة",
+    "noRequests": "لا توجد طلبات",
+    "review": "مراجعة"
+  },
+  "myRequests": {
+    "title": "طلباتي",
+    "subtitle": "إنشاء ومتابعة طلبات الموافقة الخاصة بك",
+    "newRequest": "طلب جديد",
+    "noRequests": "لا توجد طلبات بعد",
+    "noRequestsDescription": "قم بإنشاء طلبك الأول للبدء",
+    "createRequest": "إنشاء طلب",
+    "approved": "موافق عليه"
+  },
+  "request": {
+    "title": "العنوان",
+    "description": "الوصف",
+    "status": "الحالة",
+    "createdBy": "أنشئ بواسطة",
+    "decidedBy": "تم اتخاذ القرار بواسطة",
+    "createdAt": "تاريخ الإنشاء",
+    "decidedAt": "تاريخ القرار",
+    "suggestions": "الاقتراحات",
+    "suggestion": "اقتراح",
+    "choose": "اختيار",
+    "chosen": "مختار",
+    "actions": "الإجراءات",
+    "makeOtherDecision": "اتخاذ قرار آخر",
+    "cancelOtherDecision": "إلغاء القرار الآخر",
+    "yourDecision": "قرارك",
+    "enterCustomDecision": "أدخل قرارك المخصص...",
+    "submitDecision": "إرسال القرار",
+    "rejectRequest": "رفض الطلب",
+    "rejectConfirmTitle": "رفض الطلب",
+    "rejectConfirmDescription": "هل أنت متأكد من رغبتك في رفض هذا الطلب؟ لا يمكن التراجع عن هذا الإجراء.",
+    "reject": "رفض",
+    "customDecision": "قرار مخصص",
+    "awaitingReview": "في انتظار مراجعة الرئيس التنفيذي",
+    "rejectedBy": "رفض بواسطة {name}",
+    "approvedBy": "وافق عليه {name}"
+  },
+  "createRequest": {
+    "title": "إنشاء طلب جديد",
+    "enterTitle": "أدخل عنوان الطلب",
+    "enterDescription": "قدم سياقاً مفصلاً لطلبك",
+    "suggestionsRequired": "الاقتراحات (مطلوب 2-10)",
+    "addSuggestion": "إضافة اقتراح",
+    "suggestionLabel": "التسمية",
+    "suggestionDetails": "التفاصيل",
+    "briefDescription": "وصف مختصر لهذا الخيار",
+    "detailedExplanation": "شرح مفصل لهذا الخيار",
+    "creating": "جاري الإنشاء...",
+    "titleRequired": "العنوان مطلوب",
+    "descriptionRequired": "الوصف مطلوب",
+    "labelRequired": "التسمية مطلوبة",
+    "detailsRequired": "التفاصيل مطلوبة",
+    "minSuggestions": "مطلوب على الأقل اقتراحان",
+    "maxSuggestions": "الحد الأقصى 10 اقتراحات"
+  },
+  "audit": {
+    "activityTimeline": "الجدول الزمني للنشاط",
+    "noActivity": "لا يوجد نشاط بعد",
+    "requestCreated": "تم إنشاء الطلب",
+    "requestProcessed": "تمت معالجة الطلب",
+    "requestRejected": "تم رفض الطلب",
+    "otherDecision": "تم اتخاذ قرار مخصص",
+    "choseSuggestion": "تم اختيار الاقتراح: {label}"
+  },
+  "status": {
+    "pending": "قيد الانتظار",
+    "processed": "تمت المعالجة",
+    "rejected": "مرفوض"
+  },
+  "roles": {
+    "CEO": "الرئيس التنفيذي",
+    "EXECUTIVE": "مدير تنفيذي"
+  },
+  "errors": {
+    "generic": "حدث خطأ غير متوقع",
+    "unauthorized": "الوصول مرفوض",
+    "forbidden": "ليس لديك صلاحية لتنفيذ هذا الإجراء",
+    "notFound": "المورد غير موجود",
+    "validation": "يرجى التحقق من المدخلات والمحاولة مرة أخرى",
+    "network": "خطأ في الشبكة، يرجى المحاولة مرة أخرى"
+  },
+  "pagination": {
+    "page": "صفحة",
+    "of": "من",
+    "showing": "عرض",
+    "to": "إلى",
+    "entries": "إدخالات"
+  }
+}

@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useSession } from 'next-auth/react'
+import { useTranslations } from 'next-intl'
 import { MainLayout } from '@/components/layout/main-layout'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -17,6 +18,7 @@ import { type RequestListItem, type RequestStatus, type PaginatedResponse, type 
 
 export default function DashboardPage() {
   const { data: session } = useSession()
+  const t = useTranslations('dashboard')
   const [requests, setRequests] = useState<RequestListItem[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)

@@ -1,0 +1,14 @@
+HTTP/1.1 404 Not Found
+link: <http://localhost:3000/ar/sign-in>; rel="alternate"; hreflang="ar", <http://localhost:3000/en/sign-in>; rel="alternate"; hreflang="en", <http://localhost:3000/sign-in>; rel="alternate"; hreflang="x-default"
+set-cookie: NEXT_LOCALE=ar; Path=/; SameSite=lax
+Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding
+Cache-Control: no-store, must-revalidate
+x-nextjs-cache: HIT
+x-nextjs-prerender: 1
+X-Powered-By: Next.js
+Content-Type: text/html; charset=utf-8
+Date: Thu, 16 Oct 2025 11:55:21 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+Transfer-Encoding: chunked
+

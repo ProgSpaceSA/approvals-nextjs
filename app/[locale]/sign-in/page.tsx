@@ -1,8 +1,8 @@
 'use client'
 
-import { useState } from 'react'
-import { signIn } from 'next-auth/react'
-import { useRouter } from 'next/navigation'
+import { useEffect, useState } from 'react'
+import { signIn, getSession } from 'next-auth/react'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useTranslations, useLocale } from 'next-intl'
@@ -18,6 +18,7 @@ export default function SignInPage() {
   const [error, setError] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(false)
   const router = useRouter()
+  const searchParams = useSearchParams()
   const t = useTranslations('auth')
   const tNav = useTranslations('navigation')
   const locale = useLocale()
@@ -39,12 +40,22 @@ export default function SignInPage() {
         email: data.email,
         password: data.password,
         redirect: false,
+        callbackUrl: `/${locale}/dashboard`,
       })
 
-      if (result?.error) {
+      if (!result) {
+        setError(t('invalidCredentials'))
+      } else if (result.error) {
         setError(t('invalidCredentials'))
       } else {
-        router.refresh()
+        // Decide destination based on role
+        const s = await getSession()
+        const role = s?.user?.role
+        if (role === 'CEO') {
+          router.replace(`/${locale}/dashboard`)
+        } else {
+          router.replace(`/${locale}/my-requests`)
+        }
       }
     } catch (err) {
       setError(t('invalidCredentials'))
@@ -53,63 +64,99 @@ export default function SignInPage() {
     }
   }
 
+  // If we were redirected back by NextAuth with an error query, surface it
+  useEffect(() => {
+    const err = searchParams?.get('error')
+    if (!err) return
+    // Map common NextAuth errors to a friendly message
+    const known = new Set([
+      'CredentialsSignin',
+      'AccessDenied',
+      'Callback',
+      'OAuthAccountNotLinked',
+      'OAuthCallback',
+      'EmailCreateAccount',
+      'Verification',
+    ])
+    if (known.has(err)) {
+      setError(t('invalidCredentials'))
+    } else {
+      setError(t('invalidCredentials'))
+    }
+  }, [searchParams, t])
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8">
-        <div className="text-center">
-          <div className="flex justify-between items-center mb-4">
-            <h1 className="text-3xl font-bold text-gray-900">{tNav('appTitle')}</h1>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-md w-full space-y-8 animate-in fade-in duration-500">
+        {/* Header */}
+        <div className="text-center space-y-4">
+          <div className="flex justify-between items-center mb-6">
+            <h1 className="text-4xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+              {tNav('appTitle')}
+            </h1>
             <LanguageSwitcher />
           </div>
-          <p className="mt-2 text-gray-600">{t('signIn')}</p>
+          <div className="space-y-2">
+            <h2 className="text-2xl font-semibold text-gray-900 dark:text-gray-100">
+              {t('signIn')}
+            </h2>
+            <p className="text-gray-600 dark:text-gray-400">
+              {t('enterCredentials')}
+            </p>
+          </div>
         </div>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>{t('signIn')}</CardTitle>
-            <CardDescription>
-              {t('enterCredentials')}
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-              <div>
-                <Label htmlFor="email">{t('email')}</Label>
+        {/* Sign In Card */}
+        <Card className="shadow-xl border-0 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm">
+          <CardContent className="pt-8 pb-8 px-6">
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+              <div className="space-y-2">
+                <Label htmlFor="email" className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                  {t('email')}
+                </Label>
                 <Input
                   id="email"
                   type="email"
                   placeholder={t('enterEmail')}
                   {...register('email')}
                   disabled={isLoading}
+                  className="h-11 bg-white dark:bg-slate-700 border-gray-300 dark:border-slate-600 focus:border-indigo-500 dark:focus:border-indigo-400 focus:ring-indigo-500 dark:focus:ring-indigo-400 transition-all"
                 />
                 {errors.email && (
-                  <p className="text-sm text-red-600 mt-1">{errors.email.message}</p>
+                  <p className="text-sm text-red-600 dark:text-red-400 mt-1 animate-in slide-in-from-top-1">
+                    {errors.email.message}
+                  </p>
                 )}
               </div>
 
-              <div>
-                <Label htmlFor="password">{t('password')}</Label>
+              <div className="space-y-2">
+                <Label htmlFor="password" className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                  {t('password')}
+                </Label>
                 <Input
                   id="password"
                   type="password"
                   placeholder={t('enterPassword')}
                   {...register('password')}
                   disabled={isLoading}
+                  className="h-11 bg-white dark:bg-slate-700 border-gray-300 dark:border-slate-600 focus:border-indigo-500 dark:focus:border-indigo-400 focus:ring-indigo-500 dark:focus:ring-indigo-400 transition-all"
                 />
                 {errors.password && (
-                  <p className="text-sm text-red-600 mt-1">{errors.password.message}</p>
+                  <p className="text-sm text-red-600 dark:text-red-400 mt-1 animate-in slide-in-from-top-1">
+                    {errors.password.message}
+                  </p>
                 )}
               </div>
 
               {error && (
-                <div className="text-sm text-red-600 text-center p-2 bg-red-50 rounded">
+                <div className="text-sm text-red-600 dark:text-red-400 text-center p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg animate-in slide-in-from-top-1">
                   {error}
                 </div>
               )}
 
               <Button
                 type="submit"
-                className="w-full"
+                className="w-full h-11 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-medium shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-[1.02]"
                 disabled={isLoading}
               >
                 {isLoading ? (
@@ -122,16 +169,13 @@ export default function SignInPage() {
                 )}
               </Button>
             </form>
-
-            <div className="mt-6 text-sm text-gray-600">
-              <p className="font-semibold">{t('demoAccounts')}:</p>
-              <div className="mt-2 space-y-1">
-                <p><strong>CEO:</strong> ceo@example.com / Passw0rd!</p>
-                <p><strong>Executive:</strong> exec@example.com / Passw0rd!</p>
-              </div>
-            </div>
           </CardContent>
         </Card>
+
+        {/* Footer */}
+        <p className="text-center text-sm text-gray-500 dark:text-gray-400">
+          {new Date().getFullYear()} © {tNav('appTitle')}
+        </p>
       </div>
     </div>
   )

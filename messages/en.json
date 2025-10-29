@@ -29,7 +29,7 @@
     "demoAccounts": "Demo Accounts"
   },
   "navigation": {
-    "appTitle": "Approvals System",
+    "appTitle": "إنهج / Inhaj",
     "dashboard": "Dashboard",
     "myRequests": "My Requests",
     "requests": "Requests"
@@ -44,7 +44,13 @@
     "searchPlaceholder": "Search requests...",
     "needsReview": "Needs Review",
     "noRequests": "No requests found",
-    "review": "Review"
+    "review": "Review",
+    "error": "Error",
+    "tryAgain": "Try Again",
+    "by": "By",
+    "suggestions": "suggestions",
+    "decidedBy": "Decided by",
+    "view": "View"
   },
   "myRequests": {
     "title": "My Requests",
@@ -93,6 +99,7 @@
     "briefDescription": "Brief description of this option",
     "detailedExplanation": "Detailed explanation of this option",
     "creating": "Creating...",
+    "createRequest": "Create Request",
     "titleRequired": "Title is required",
     "descriptionRequired": "Description is required",
     "labelRequired": "Label is required",

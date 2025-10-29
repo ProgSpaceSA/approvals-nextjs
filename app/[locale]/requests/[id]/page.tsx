@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
+import { useLocale, useTranslations } from 'next-intl'
 import { MainLayout } from '@/components/layout/main-layout'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -25,6 +26,10 @@ interface RequestPageProps {
 export default function RequestPage({ params }: RequestPageProps) {
   const { data: session } = useSession()
   const router = useRouter()
+  const locale = useLocale()
+  const tReq = useTranslations('request')
+  const tAudit = useTranslations('audit')
+  const tCommon = useTranslations('common')
   const [request, setRequest] = useState<RequestDetail | null>(null)
   const [auditLogs, setAuditLogs] = useState<AuditLogWithRelations[]>([])
   const [loading, setLoading] = useState(true)
@@ -50,7 +55,7 @@ export default function RequestPage({ params }: RequestPageProps) {
 
       setRequest(result.data)
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to fetch request')
+      setError(err instanceof Error ? err.message : tCommon('generic'))
     } finally {
       setLoading(false)
     }
@@ -96,7 +101,7 @@ export default function RequestPage({ params }: RequestPageProps) {
       await fetchRequest()
       await fetchAuditLogs()
     } catch (err) {
-      alert(err instanceof Error ? err.message : 'Failed to choose suggestion')
+      alert(err instanceof Error ? err.message : tCommon('generic'))
     } finally {
       setActionLoading(null)
     }
@@ -104,7 +109,7 @@ export default function RequestPage({ params }: RequestPageProps) {
 
   const handleOtherDecision = async () => {
     if (!otherDecision.trim()) {
-      alert('Please enter a decision')
+      alert(tReq('validation'))
       return
     }
 
@@ -131,7 +136,7 @@ export default function RequestPage({ params }: RequestPageProps) {
       setOtherDecision('')
       setShowOtherForm(false)
     } catch (err) {
-      alert(err instanceof Error ? err.message : 'Failed to submit decision')
+      alert(err instanceof Error ? err.message : tCommon('generic'))
     } finally {
       setActionLoading(null)
     }
@@ -155,7 +160,7 @@ export default function RequestPage({ params }: RequestPageProps) {
       await fetchRequest()
       await fetchAuditLogs()
     } catch (err) {
-      alert(err instanceof Error ? err.message : 'Failed to reject request')
+      alert(err instanceof Error ? err.message : tCommon('generic'))
     } finally {
       setActionLoading(null)
     }
@@ -179,13 +184,13 @@ export default function RequestPage({ params }: RequestPageProps) {
   const getActionText = (action: string, metadata: any) => {
     switch (action) {
       case 'REQUEST_CREATED':
-        return 'Created request'
+        return tAudit('requestCreated')
       case 'REQUEST_PROCESSED':
-        return metadata?.suggestionLabel ? `Chose suggestion: ${metadata.suggestionLabel}` : 'Processed request'
+        return metadata?.suggestionLabel ? tAudit('choseSuggestion', { label: metadata.suggestionLabel }) : tAudit('requestProcessed')
       case 'REQUEST_REJECTED':
-        return 'Rejected request'
+        return tAudit('requestRejected')
       case 'OTHER_DECISION':
-        return 'Made custom decision'
+        return tAudit('otherDecision')
       default:
         return action
     }
@@ -205,9 +210,9 @@ export default function RequestPage({ params }: RequestPageProps) {
     return (
       <MainLayout>
         <div className="text-center">
-          <p className="text-red-600 mb-4">Error: {error || 'Request not found'}</p>
-          <Link href={isCEO ? '/dashboard' : '/my-requests'}>
-            <Button>Go Back</Button>
+          <p className="text-red-600 mb-4">{tCommon('error') || 'Error'}: {error || tCommon('notFound')}</p>
+          <Link href={isCEO ? `/${locale}/dashboard` : `/${locale}/my-requests`}>
+            <Button>{tCommon('back')}</Button>
           </Link>
         </div>
       </MainLayout>
@@ -219,10 +224,10 @@ export default function RequestPage({ params }: RequestPageProps) {
       <div className="max-w-6xl mx-auto space-y-6">
         {/* Header */}
         <div className="flex items-center gap-4">
-          <Link href={isCEO ? '/dashboard' : '/my-requests'}>
+          <Link href={isCEO ? `/${locale}/dashboard` : `/${locale}/my-requests`}>
             <Button variant="outline" size="sm">
               <ArrowLeft className="h-4 w-4 mr-2" />
-              Back
+              {tCommon('back')}
             </Button>
           </Link>
           <div className="flex-1">
@@ -233,11 +238,11 @@ export default function RequestPage({ params }: RequestPageProps) {
             <div className="flex items-center gap-4 text-sm text-muted-foreground">
               <span className="flex items-center gap-1">
                 <User className="h-4 w-4" />
-                Created by {request.createdBy.name}
+                {tReq('createdBy')} {request.createdBy.name}
               </span>
               <span>{formatDate(request.createdAt)}</span>
               {request.decidedBy && (
-                <span>Decided by {request.decidedBy.name} on {formatDate(request.decidedAt!)}</span>
+                <span>{tReq('decidedBy')} {request.decidedBy.name}</span>
               )}
             </div>
           </div>
@@ -249,7 +254,7 @@ export default function RequestPage({ params }: RequestPageProps) {
             {/* Description */}
             <Card>
               <CardHeader>
-                <CardTitle>Description</CardTitle>
+                <CardTitle>{tReq('description')}</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="whitespace-pre-wrap">{request.description}</p>
@@ -259,7 +264,7 @@ export default function RequestPage({ params }: RequestPageProps) {
             {/* Suggestions */}
             <Card>
               <CardHeader>
-                <CardTitle>Suggestions ({request.suggestions.length})</CardTitle>
+                <CardTitle>{tReq('suggestions')} ({request.suggestions.length})</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 {request.suggestions.map((suggestion) => (
@@ -292,7 +297,7 @@ export default function RequestPage({ params }: RequestPageProps) {
                           {actionLoading === suggestion.id ? (
                             <LoadingSpinner size="sm" />
                           ) : (
-                            'Choose'
+                            tReq('choose')
                           )}
                         </Button>
                       )}
@@ -306,7 +311,7 @@ export default function RequestPage({ params }: RequestPageProps) {
             {request.otherDecision && (
               <Card>
                 <CardHeader>
-                  <CardTitle>Custom Decision</CardTitle>
+                  <CardTitle>{tReq('customDecision')}</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
@@ -320,7 +325,7 @@ export default function RequestPage({ params }: RequestPageProps) {
             {canTakeAction && (
               <Card>
                 <CardHeader>
-                  <CardTitle>Actions</CardTitle>
+                  <CardTitle>{tReq('actions')}</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   {/* Other Decision Form */}
@@ -330,16 +335,16 @@ export default function RequestPage({ params }: RequestPageProps) {
                       onClick={() => setShowOtherForm(!showOtherForm)}
                       disabled={!!actionLoading}
                     >
-                      {showOtherForm ? 'Cancel Other Decision' : 'Make Other Decision'}
+                      {showOtherForm ? tReq('cancelOtherDecision') : tReq('makeOtherDecision')}
                     </Button>
 
                     {showOtherForm && (
                       <div className="mt-4 space-y-4">
                         <div>
-                          <Label htmlFor="otherDecision">Your Decision</Label>
+                          <Label htmlFor="otherDecision">{tReq('yourDecision')}</Label>
                           <Textarea
                             id="otherDecision"
-                            placeholder="Enter your custom decision..."
+                            placeholder={tReq('enterCustomDecision')}
                             value={otherDecision}
                             onChange={(e) => setOtherDecision(e.target.value)}
                             rows={4}
@@ -352,7 +357,7 @@ export default function RequestPage({ params }: RequestPageProps) {
                           {actionLoading === 'other' ? (
                             <LoadingSpinner size="sm" className="mr-2" />
                           ) : null}
-                          Submit Decision
+                          {tReq('submitDecision')}
                         </Button>
                       </div>
                     )}
@@ -365,23 +370,23 @@ export default function RequestPage({ params }: RequestPageProps) {
                         {actionLoading === 'reject' ? (
                           <LoadingSpinner size="sm" className="mr-2" />
                         ) : null}
-                        Reject Request
+                        {tReq('rejectRequest')}
                       </Button>
                     </AlertDialogTrigger>
                     <AlertDialogContent>
                       <AlertDialogHeader>
-                        <AlertDialogTitle>Reject Request</AlertDialogTitle>
+                        <AlertDialogTitle>{tReq('rejectConfirmTitle')}</AlertDialogTitle>
                         <AlertDialogDescription>
-                          Are you sure you want to reject this request? This action cannot be undone.
+                          {tReq('rejectConfirmDescription')}
                         </AlertDialogDescription>
                       </AlertDialogHeader>
                       <AlertDialogFooter>
-                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                        <AlertDialogCancel>{tCommon('cancel')}</AlertDialogCancel>
                         <AlertDialogAction
                           onClick={handleReject}
                           className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
                         >
-                          Reject
+                          {tReq('reject')}
                         </AlertDialogAction>
                       </AlertDialogFooter>
                     </AlertDialogContent>
@@ -395,11 +400,11 @@ export default function RequestPage({ params }: RequestPageProps) {
           <div className="space-y-6">
             <Card>
               <CardHeader>
-                <CardTitle>Activity Timeline</CardTitle>
+                <CardTitle>{tAudit('activityTimeline')}</CardTitle>
               </CardHeader>
               <CardContent>
                 {auditLogs.length === 0 ? (
-                  <p className="text-muted-foreground text-sm">No activity yet</p>
+                  <p className="text-muted-foreground text-sm">{tAudit('noActivity')}</p>
                 ) : (
                   <div className="space-y-4">
                     {auditLogs.map((log) => (

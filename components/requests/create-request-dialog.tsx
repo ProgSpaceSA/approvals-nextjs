@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { useTranslations } from 'next-intl'
 import { useForm, useFieldArray } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Button } from '@/components/ui/button'
@@ -23,6 +24,9 @@ interface CreateRequestDialogProps {
 export function CreateRequestDialog({ open, onOpenChange, onRequestCreated }: CreateRequestDialogProps) {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const t = useTranslations('createRequest')
+  const tRequest = useTranslations('request')
+  const tCommon = useTranslations('common')
 
   const {
     register,
@@ -70,7 +74,7 @@ export function CreateRequestDialog({ open, onOpenChange, onRequestCreated }: Cr
       reset()
       onRequestCreated()
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to create request')
+      setError(err instanceof Error ? err.message : t('validation'))
     } finally {
       setIsSubmitting(false)
     }
@@ -100,17 +104,17 @@ export function CreateRequestDialog({ open, onOpenChange, onRequestCreated }: Cr
     <AlertDialog open={open} onOpenChange={handleClose}>
       <AlertDialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
         <AlertDialogHeader>
-          <AlertDialogTitle>Create New Request</AlertDialogTitle>
+          <AlertDialogTitle>{t('title')}</AlertDialogTitle>
         </AlertDialogHeader>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           {/* Basic Information */}
           <div className="space-y-4">
             <div>
-              <Label htmlFor="title">Title *</Label>
+              <Label htmlFor="title">{tRequest('title')} *</Label>
               <Input
                 id="title"
-                placeholder="Enter request title"
+                placeholder={t('enterTitle')}
                 {...register('title')}
                 disabled={isSubmitting}
               />
@@ -120,10 +124,10 @@ export function CreateRequestDialog({ open, onOpenChange, onRequestCreated }: Cr
             </div>
 
             <div>
-              <Label htmlFor="description">Description *</Label>
+              <Label htmlFor="description">{tRequest('description')} *</Label>
               <Textarea
                 id="description"
-                placeholder="Provide detailed context for your request"
+                placeholder={t('enterDescription')}
                 rows={4}
                 {...register('description')}
                 disabled={isSubmitting}
@@ -137,7 +141,7 @@ export function CreateRequestDialog({ open, onOpenChange, onRequestCreated }: Cr
           {/* Suggestions */}
           <div>
             <div className="flex justify-between items-center mb-4">
-              <Label className="text-base font-semibold">Suggestions (2-10 required)</Label>
+              <Label className="text-base font-semibold">{t('suggestionsRequired')}</Label>
               <Button
                 type="button"
                 variant="outline"
@@ -146,7 +150,7 @@ export function CreateRequestDialog({ open, onOpenChange, onRequestCreated }: Cr
                 disabled={fields.length >= 10 || isSubmitting}
               >
                 <Plus className="h-4 w-4 mr-1" />
-                Add Suggestion
+                {t('addSuggestion')}
               </Button>
             </div>
 
@@ -155,7 +159,7 @@ export function CreateRequestDialog({ open, onOpenChange, onRequestCreated }: Cr
                 <Card key={field.id}>
                   <CardHeader className="pb-3">
                     <CardTitle className="text-sm flex justify-between items-center">
-                      Suggestion {index + 1}
+                      {tRequest('suggestion')} {index + 1}
                       {fields.length > 2 && (
                         <Button
                           type="button"
@@ -171,10 +175,10 @@ export function CreateRequestDialog({ open, onOpenChange, onRequestCreated }: Cr
                   </CardHeader>
                   <CardContent className="space-y-3">
                     <div>
-                      <Label htmlFor={`suggestions.${index}.label`}>Label *</Label>
+                      <Label htmlFor={`suggestions.${index}.label`}>{t('suggestionLabel')} *</Label>
                       <Input
                         id={`suggestions.${index}.label`}
-                        placeholder="Brief description of this option"
+                        placeholder={t('briefDescription')}
                         {...register(`suggestions.${index}.label`)}
                         disabled={isSubmitting}
                       />
@@ -186,10 +190,10 @@ export function CreateRequestDialog({ open, onOpenChange, onRequestCreated }: Cr
                     </div>
 
                     <div>
-                      <Label htmlFor={`suggestions.${index}.details`}>Details *</Label>
+                      <Label htmlFor={`suggestions.${index}.details`}>{t('suggestionDetails')} *</Label>
                       <Textarea
                         id={`suggestions.${index}.details`}
-                        placeholder="Detailed explanation of this option"
+                        placeholder={t('detailedExplanation')}
                         rows={3}
                         {...register(`suggestions.${index}.details`)}
                         disabled={isSubmitting}
@@ -225,16 +229,16 @@ export function CreateRequestDialog({ open, onOpenChange, onRequestCreated }: Cr
               onClick={handleClose}
               disabled={isSubmitting}
             >
-              Cancel
+              {tCommon('cancel')}
             </Button>
             <Button type="submit" disabled={isSubmitting}>
               {isSubmitting ? (
                 <div className="flex items-center">
                   <LoadingSpinner size="sm" className="mr-2" />
-                  Creating...
+                  {t('creating')}
                 </div>
               ) : (
-                'Create Request'
+                t('createRequest')
               )}
             </Button>
           </div>

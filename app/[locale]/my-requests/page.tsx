@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useSession } from 'next-auth/react'
 import { MainLayout } from '@/components/layout/main-layout'
+import { useTranslations } from 'next-intl'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { StatusBadge } from '@/components/ui/status-badge'
@@ -16,6 +17,8 @@ import { type RequestListItem, type PaginatedResponse, type ApiResponse } from '
 
 export default function MyRequestsPage() {
   const { data: session } = useSession()
+  const t = useTranslations('myRequests')
+  const tCommon = useTranslations('common')
   const [requests, setRequests] = useState<RequestListItem[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -49,7 +52,7 @@ export default function MyRequestsPage() {
       setRequests(result.data.data)
       setTotalPages(result.data.meta.totalPages)
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to fetch requests')
+      setError(err instanceof Error ? err.message : t('title'))
     } finally {
       setLoading(false)
     }
@@ -126,58 +129,63 @@ export default function MyRequestsPage() {
 
   return (
     <MainLayout>
-      <div className="space-y-6">
+      <div className="space-y-6 pb-8">
         {/* Header */}
-        <div className="flex justify-between items-center">
+        <div className="flex justify-between items-center mb-6">
           <div>
-            <h1 className="text-3xl font-bold">My Requests</h1>
-            <p className="text-muted-foreground">Create and track your approval requests</p>
+            <h1 className="text-4xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent mb-2">
+              {t('title')}
+            </h1>
+            <p className="text-muted-foreground text-lg">{t('subtitle')}</p>
           </div>
-          <Button onClick={() => setShowCreateDialog(true)}>
+          <Button 
+            onClick={() => setShowCreateDialog(true)}
+            className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105"
+          >
             <Plus className="h-4 w-4 mr-2" />
-            New Request
+            {t('newRequest')}
           </Button>
         </div>
 
         {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          <Card>
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+          <Card className="shadow-lg hover:shadow-xl transition-all duration-300 border-0 bg-gradient-to-br from-slate-50 to-white dark:from-slate-800 dark:to-slate-900">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Total Requests</CardTitle>
-              <FileText className="h-4 w-4 text-muted-foreground" />
+              <CardTitle className="text-sm font-medium text-gray-700 dark:text-gray-300">{t('title')}</CardTitle>
+              <FileText className="h-5 w-5 text-indigo-600 dark:text-indigo-400" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{stats.total}</div>
+              <div className="text-3xl font-bold text-gray-900 dark:text-gray-100">{stats.total}</div>
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="shadow-lg hover:shadow-xl transition-all duration-300 border-0 bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-900/20 dark:to-orange-900/20">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Pending</CardTitle>
-              <Clock className="h-4 w-4 text-amber-600" />
+              <CardTitle className="text-sm font-medium text-gray-700 dark:text-gray-300">{tCommon('pending') || 'Pending'}</CardTitle>
+              <Clock className="h-5 w-5 text-amber-600 dark:text-amber-400" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-amber-600">{stats.pending}</div>
+              <div className="text-3xl font-bold text-amber-600 dark:text-amber-400">{stats.pending}</div>
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="shadow-lg hover:shadow-xl transition-all duration-300 border-0 bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Approved</CardTitle>
-              <CheckCircle className="h-4 w-4 text-green-600" />
+              <CardTitle className="text-sm font-medium text-gray-700 dark:text-gray-300">{t('approved')}</CardTitle>
+              <CheckCircle className="h-5 w-5 text-green-600 dark:text-green-400" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-green-600">{stats.processed}</div>
+              <div className="text-3xl font-bold text-green-600 dark:text-green-400">{stats.processed}</div>
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="shadow-lg hover:shadow-xl transition-all duration-300 border-0 bg-gradient-to-br from-red-50 to-rose-50 dark:from-red-900/20 dark:to-rose-900/20">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Rejected</CardTitle>
-              <XCircle className="h-4 w-4 text-red-600" />
+              <CardTitle className="text-sm font-medium text-gray-700 dark:text-gray-300">{tCommon('rejected') || 'Rejected'}</CardTitle>
+              <XCircle className="h-5 w-5 text-red-600 dark:text-red-400" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-red-600">{stats.rejected}</div>
+              <div className="text-3xl font-bold text-red-600 dark:text-red-400">{stats.rejected}</div>
             </CardContent>
           </Card>
         </div>
@@ -191,9 +199,9 @@ export default function MyRequestsPage() {
           <Card>
             <CardContent className="pt-6">
               <div className="text-center text-red-600">
-                <p>Error: {error}</p>
+                <p>{tCommon('error') || 'Error'}: {error}</p>
                 <Button onClick={fetchRequests} className="mt-2">
-                  Try Again
+                  {t('createRequest')}
                 </Button>
               </div>
             </CardContent>
@@ -203,11 +211,11 @@ export default function MyRequestsPage() {
             <CardContent className="pt-6">
               <div className="text-center text-muted-foreground">
                 <FileText className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                <p className="text-lg mb-2">No requests yet</p>
-                <p className="mb-4">Create your first request to get started</p>
+                <p className="text-lg mb-2">{t('noRequests')}</p>
+                <p className="mb-4">{t('noRequestsDescription')}</p>
                 <Button onClick={() => setShowCreateDialog(true)}>
                   <Plus className="h-4 w-4 mr-2" />
-                  Create Request
+                  {t('createRequest')}
                 </Button>
               </div>
             </CardContent>
@@ -215,42 +223,49 @@ export default function MyRequestsPage() {
         ) : (
           <div className="space-y-4">
             {requests.map((request) => (
-              <Card key={request.id} className="hover:shadow-md transition-shadow">
-                <CardContent className="pt-6">
-                  <div className="flex justify-between items-start">
+              <Card 
+                key={request.id} 
+                className="shadow-lg hover:shadow-xl transition-all duration-300 border-0 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm hover:scale-[1.01]"
+              >
+                <CardContent className="pt-6 pb-6">
+                  <div className="flex justify-between items-start gap-4">
                     <div className="flex-1">
-                      <div className="flex items-center gap-3 mb-2">
+                      <div className="flex items-center gap-3 mb-3 flex-wrap">
                         <Link
                           href={`/requests/${request.id}`}
-                          className="text-lg font-semibold hover:text-primary transition-colors"
+                          className="text-lg font-semibold hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
                         >
                           {request.title}
                         </Link>
                         <StatusBadge status={request.status} />
                       </div>
 
-                      <p className="text-muted-foreground mb-3 line-clamp-2">
+                      <p className="text-muted-foreground mb-4 line-clamp-2 text-sm leading-relaxed">
                         {truncateText(request.description, 200)}
                       </p>
 
-                      <div className="flex items-center gap-4 text-sm text-muted-foreground mb-2">
-                        <span>{request._count.suggestions} suggestions</span>
-                        <span>Created {formatDateRelative(request.createdAt)}</span>
+                      <div className="flex items-center gap-4 text-sm text-muted-foreground mb-3 flex-wrap">
+                        <span>{request._count.suggestions} {tCommon('suggestions') || 'suggestions'}</span>
+                        <span>{formatDateRelative(request.createdAt)}</span>
                         {request.decidedAt && (
-                          <span>Decided {formatDateRelative(request.decidedAt)}</span>
+                          <span>{formatDateRelative(request.decidedAt)}</span>
                         )}
                       </div>
 
-                      <p className="text-sm font-medium">
+                      <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
                         {getDecisionSummary(request)}
                       </p>
                     </div>
 
                     <div className="flex flex-col items-end gap-2">
                       <Link href={`/requests/${request.id}`}>
-                        <Button variant="outline" size="sm">
+                        <Button 
+                          variant="outline" 
+                          size="sm"
+                          className="border-indigo-300 dark:border-indigo-700 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 shadow-md hover:shadow-lg transition-all"
+                        >
                           <Eye className="h-4 w-4 mr-1" />
-                          View
+                          {tCommon('view')}
                         </Button>
                       </Link>
                     </div>

@@ -29,7 +29,7 @@
     "demoAccounts": "حسابات تجريبية"
   },
   "navigation": {
-    "appTitle": "نظام الموافقات",
+    "appTitle": "إنهج / Inhaj",
     "dashboard": "لوحة التحكم",
     "myRequests": "طلباتي",
     "requests": "الطلبات"
@@ -44,7 +44,13 @@
     "searchPlaceholder": "البحث في الطلبات...",
     "needsReview": "تحتاج مراجعة",
     "noRequests": "لا توجد طلبات",
-    "review": "مراجعة"
+    "review": "مراجعة",
+    "error": "خطأ",
+    "tryAgain": "حاول مرة أخرى",
+    "by": "بواسطة",
+    "suggestions": "اقتراحات",
+    "decidedBy": "تم اتخاذ القرار بواسطة",
+    "view": "عرض"
   },
   "myRequests": {
     "title": "طلباتي",
@@ -93,6 +99,7 @@
     "briefDescription": "وصف مختصر لهذا الخيار",
     "detailedExplanation": "شرح مفصل لهذا الخيار",
     "creating": "جاري الإنشاء...",
+    "createRequest": "إنشاء طلب",
     "titleRequired": "العنوان مطلوب",
     "descriptionRequired": "الوصف مطلوب",
     "labelRequired": "التسمية مطلوبة",

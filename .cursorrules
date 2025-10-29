@@ -1,0 +1,111 @@
+# Cursor Rules for Approvals Next.js Project
+
+## Project Overview
+This is a Next.js 15+ application with TypeScript, PostgreSQL (Prisma ORM), NextAuth.js, and internationalization (next-intl).
+
+## Tech Stack
+- **Framework**: Next.js 15+ (App Router, React Server Components)
+- **Language**: TypeScript (strict mode)
+- **Database**: PostgreSQL with Prisma ORM
+- **Authentication**: NextAuth.js (Auth.js) with RBAC
+- **Validation**: Zod schemas
+- **UI**: Tailwind CSS + shadcn/ui components
+- **Forms**: react-hook-form with zod resolver
+- **i18n**: next-intl (Arabic & English with RTL support)
+
+## Code Style & Best Practices
+
+### TypeScript
+- Use strict TypeScript mode
+- Always type function parameters and return types
+- Prefer `type` over `interface` for props (except for component props that extend)
+- Use proper Prisma types from `@prisma/client`
+
+### Next.js App Router
+- Use `async`/`await` for Server Components
+- Use `'use client'` directive at the top for Client Components
+- Always await `params` in Next.js 15: `const { locale } = await params`
+- Use `getTranslations` from `next-intl/server` for Server Components
+- Use `useTranslations` hook for Client Components
+
+### Internationalization
+- Always use translation keys from `messages/en.json` and `messages/ar.json`
+- Never hardcode English or Arabic text in components
+- RTL is the default; only switch to LTR for `/en` paths
+- Use `useLocale()` or `getLocale()` to determine language context
+
+### Components
+- Use shadcn/ui components from `@/components/ui`
+- Import icons from `lucide-react`
+- Follow consistent styling patterns:
+  - Cards: `shadow-lg border-0 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm`
+  - Buttons: `bg-gradient-to-r from-indigo-600 to-purple-600` for primary actions
+  - Use `hover:shadow-xl transition-all duration-300` for interactivity
+
+### Authentication & Authorization
+- Use `useSession()` from `next-auth/react` in Client Components
+- Check user roles: `session?.user.role === 'CEO'` or `'EXECUTIVE'`
+- Protect routes with middleware or client-side checks
+
+### Database & Prisma
+- Always use Prisma Client for database operations
+- Use transactions for multi-step operations
+- Validate inputs with Zod before database operations
+- Handle errors gracefully and log appropriately
+
+### API Routes
+- Validate request data with Zod schemas
+- Return consistent API responses: `{ success: boolean, data?: T, error?: { message: string } }`
+- Use proper HTTP status codes
+- Handle errors and return meaningful messages
+
+### Styling
+- Use Tailwind CSS utility classes
+- Support dark mode with `dark:` variants
+- Ensure RTL compatibility with proper flex/grid direction
+- Use consistent spacing and typography scales
+- Apply modern design: gradients, shadows, backdrop blur
+
+### File Organization
+- Pages: `app/[locale]/*/page.tsx`
+- Components: `components/**/*.tsx`
+- API Routes: `app/api/**/route.ts`
+- Utils: `lib/**/*.ts`
+- Types: `types/**/*.ts`
+- Translations: `messages/{locale}.json`
+
+## Common Patterns
+
+### Creating a new page:
+1. Create `app/[locale]/new-page/page.tsx`
+2. Add translations to `messages/en.json` and `messages/ar.json`
+3. Use `useTranslations` or `getTranslations`
+4. Wrap with `MainLayout` if needed
+
+### Creating a new API route:
+1. Create `app/api/endpoint/route.ts`
+2. Validate with Zod
+3. Check authentication/authorization
+4. Return `ApiResponse<T>` type
+
+### Form handling:
+1. Use `react-hook-form` with `zodResolver`
+2. Use Zod schema from `lib/validations`
+3. Show loading states
+4. Handle errors gracefully
+
+## Environment Variables
+- `DATABASE_URL`: PostgreSQL connection string
+- `NEXTAUTH_SECRET`: NextAuth secret key
+- `NEXTAUTH_URL`: Public URL (e.g., `https://inhaj.com`)
+- `NEXT_PUBLIC_SITE_URL`: Same as `NEXTAUTH_URL`
+- `NODE_ENV`: `production` or `development`
+
+## Important Notes
+- Default locale is Arabic (RTL)
+- CEO users see `/dashboard`, Executives see `/my-requests`
+- All user-facing text must be translated
+- Use optimistic updates where appropriate
+- Ensure mobile responsiveness
+- Maintain audit trail integrity
+

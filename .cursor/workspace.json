@@ -1,0 +1,60 @@
+{
+  "name": "Approvals Next.js",
+  "description": "Next.js approvals platform with PostgreSQL, NextAuth, and i18n",
+  "type": "nextjs",
+  "language": "typescript",
+  "framework": "nextjs",
+  "database": "postgresql",
+  "features": [
+    "nextjs-15",
+    "typescript",
+    "prisma",
+    "nextauth",
+    "next-intl",
+    "tailwindcss",
+    "shadcn-ui",
+    "rtl-support"
+  ],
+  "paths": {
+    "components": "components",
+    "pages": "app/[locale]",
+    "api": "app/api",
+    "lib": "lib",
+    "types": "types",
+    "messages": "messages"
+  },
+  "locale": {
+    "default": "ar",
+    "supported": ["ar", "en"],
+    "rtl": true
+  },
+  "auth": {
+    "provider": "nextauth",
+    "roles": ["CEO", "EXECUTIVE"]
+  },
+  "build": {
+    "command": "npm run build",
+    "output": ".next"
+  },
+  "dev": {
+    "command": "npm run dev",
+    "port": 3000
+  },
+  "database": {
+    "provider": "postgresql",
+    "orm": "prisma",
+    "migrations": "prisma/migrations"
+  },
+  "env": {
+    "files": [".env", ".env.local"]
+  },
+  "ignore": [
+    "node_modules",
+    ".next",
+    "out",
+    "build",
+    "dist",
+    ".git"
+  ]
+}
+

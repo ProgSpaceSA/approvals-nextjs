@@ -1,16 +1,13 @@
 import {NextIntlClientProvider} from 'next-intl'
 import {getMessages, setRequestLocale} from 'next-intl/server'
 
-interface LocaleLayoutProps {
-  children: React.ReactNode
-  params: { locale: string }
-}
+export const dynamic = 'force-dynamic'
 
 export default async function LocaleLayout({
   children,
   params
-}: LocaleLayoutProps) {
-  const { locale } = params
+}: { children: React.ReactNode; params: Promise<{ locale: string }> }) {
+  const { locale } = await params
   setRequestLocale(locale)
 
   const isRTL = locale === 'ar'
